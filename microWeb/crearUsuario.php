@@ -1,11 +1,11 @@
 <?php
-    $nombre=$_POST["nombre"];
-    $email=$_POST["email"];
-    $usuario=$_POST["usuario"];
-    $pass=$_POST["password"];
+    $nombre = $_POST["nombre"];
+    $email = $_POST["email"];
+    $usuario = $_POST["usuario"];
+    $pass = $_POST["password"];
 
     // URL de la solicitud POST
-    $url = 'http://localhost:3001/usuarios';
+    $url = 'http://usuarios:3001/usuarios';
 
     // Datos que se enviarán en la solicitud POST
     $data = array(
@@ -29,12 +29,15 @@
     // Ejecutar la solicitud POST
     $response = curl_exec($ch);
 
-    // Manejar la respuesta
-    if ($response===false){
-        header("Location:index.html");
-    }
     // Cerrar la conexión cURL
     curl_close($ch);
-    header("Location:admin.php");
-
+    
+    // Manejar la respuesta
+    if ($response === false){
+        header("Location: index.html");
+        exit;
+    }
+    
+    header("Location: admin.php");
+    exit;
 ?>

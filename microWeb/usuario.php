@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    $us=$_SESSION["usuario"];
+    if ($us==""){
+        header("Location: index.html");
+        exit;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,13 +17,6 @@
     <title>Document</title>
 </head>
 <body>
-    <?php
-        session_start();
-        $us=$_SESSION["usuario"];
-        if ($us==""){
-            header("Location: index.html");
-        }
-    ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="usuario.php">Almacen ABC</a>
@@ -25,31 +26,26 @@
         </div>
     </div>
     </nav>
-    <form method="post" action="procesar.php"> 
+    <form method="post" action="procesar.php">
     <table class="table">
     <thead>
         <tr>
-        
         <th scope="col">Nombre</th>
         <th scope="col">Precio</th>
         <th scope="col">Inventario</th>
         <th scope="col">Cantidad</th>
-
         </tr>
     </thead>
     <tbody>
     <?php
-        $servurl="http://localhost:3002/productos";
+        $servurl="http://productos:3002/productos";
         $curl=curl_init($servurl);
-
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response=curl_exec($curl);
-       
         if ($response===false){
             curl_close($curl);
             die("Error en la conexion");
         }
-
         curl_close($curl);
         $resp=json_decode($response);
         $long=count($resp);
@@ -61,17 +57,13 @@
             $precio=$dec->precio;
             $inventario=$dec->inventario;
      ?>
-    
         <tr>
-        
         <td><?php echo $nombre; ?></td>
         <td><?php echo $precio; ?></td>
         <td><?php echo $inventario; ?></td>
         <td><?php echo '<input type="number" name="cantidad['.$id.']" value="0" min="0">';?></td>
         </tr>
-     <?php  } ?>  
-     
-     
+     <?php  } ?>
     </tbody>
     </table>
     <input type="hidden" name="usuario" value=<?php echo $us; ?>>

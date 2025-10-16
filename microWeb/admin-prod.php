@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    $us = $_SESSION["usuario"];
+    if ($us == ""){
+        header("Location: index.html");
+        exit;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,13 +17,6 @@
     <title>Document</title>
 </head>
 <body>
-    <?php
-        session_start();
-        $us=$_SESSION["usuario"];
-        if ($us==""){
-            header("Location: index.html");
-        }
-    ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="admin.php">Almacen ABC</a>
@@ -51,37 +52,37 @@
     </thead>
     <tbody>
     <?php
-        $servurl="http://localhost:3002/productos";
-        $curl=curl_init($servurl);
+        $servurl = "http://productos:3002/productos";
+        $curl = curl_init($servurl);
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response=curl_exec($curl);
-       
-        if ($response===false){
+        $response = curl_exec($curl);
+
+        if ($response === false){
             curl_close($curl);
             die("Error en la conexion");
         }
 
         curl_close($curl);
-        $resp=json_decode($response);
-        $long=count($resp);
-        for ($i=0; $i<$long; $i++){
-            $dec=$resp[$i];
-            $id=$dec ->id;
-            $nombre=$dec->nombre;
-            $precio=$dec->precio;
-            $inventario=$dec->inventario;
+        $resp = json_decode($response);
+        $long = count($resp);
+        for ($i = 0; $i < $long; $i++){
+            $dec = $resp[$i];
+            $id = $dec->id;
+            $nombre = $dec->nombre;
+            $precio = $dec->precio;
+            $inventario = $dec->inventario;
      ?>
-    
+
         <tr>
         <td><?php echo $id; ?></td>
         <td><?php echo $nombre; ?></td>
         <td><?php echo $precio; ?></td>
         <td><?php echo $inventario; ?></td>
         </tr>
-     <?php 
+     <?php
         }
-     ?>   
+     ?>
     </tbody>
     </table>
 
@@ -104,7 +105,6 @@
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Precio</label>
                 <input type="text" name="precio" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Inventario</label>
@@ -114,7 +114,9 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Crear Producto</button>
         </div>
+        </form>
         </div>
     </div>
     </div>
 </body>
+</html>

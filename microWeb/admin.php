@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    $us = $_SESSION["usuario"];
+    if ($us == ""){
+        header("Location: index.html");
+        exit;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,13 +17,6 @@
     <title>Document</title>
 </head>
 <body>
-    <?php
-        session_start();
-        $us=$_SESSION["usuario"];
-        if ($us==""){
-            header("Location: index.html");
-        }
-    ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="admin.php">Almacen ABC</a>
@@ -44,44 +45,44 @@
     <thead>
         <tr>
         <th scope="col">Nombre</th>
-        <th scope="col">email</th>
+        <th scope="col">Email</th>
         <th scope="col">Usuario</th>
         <th scope="col">Password</th>
         </tr>
     </thead>
     <tbody>
     <?php
-        $servurl="http://localhost:3001/usuarios";
-        $curl=curl_init($servurl);
+        $servurl = "http://usuarios:3001/usuarios";
+        $curl = curl_init($servurl);
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response=curl_exec($curl);
-       
-        if ($response===false){
+        $response = curl_exec($curl);
+
+        if ($response === false){
             curl_close($curl);
             die("Error en la conexion");
         }
 
         curl_close($curl);
-        $resp=json_decode($response);
-        $long=count($resp);
-        for ($i=0; $i<$long; $i++){
-            $dec=$resp[$i];
-            $nombre=$dec ->nombre;
-            $email=$dec->email;
-            $usuario=$dec->usuario;
-            $password=$dec->password;
+        $resp = json_decode($response);
+        $long = count($resp);
+        for ($i = 0; $i < $long; $i++){
+            $dec = $resp[$i];
+            $nombre = $dec->nombre;
+            $email = $dec->email;
+            $usuario = $dec->usuario;
+            $password = $dec->password;
      ?>
-    
+
         <tr>
         <td><?php echo $nombre; ?></td>
         <td><?php echo $email; ?></td>
         <td><?php echo $usuario; ?></td>
         <td><?php echo $password; ?></td>
         </tr>
-     <?php 
+     <?php
         }
-     ?>   
+     ?>
     </tbody>
     </table>
 
@@ -114,12 +115,14 @@
                 <label for="exampleInputPassword1" class="form-label">Contraseña</label>
                 <input type="password" name="password" class="form-control" id="exampleInputPassword1">
             </div>
-            
+
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Crear Usuario</button>
         </div>
+        </form>
         </div>
     </div>
     </div>
 </body>
+</html>

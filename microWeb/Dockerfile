@@ -1,2 +1,3 @@
 FROM php:8.2.5RC1-apache-buster
-COPY . /var/www/html/microweb
+RUN docker-php-ext-install mysqli
+COPY . /var/www/html/

@@ -1,9 +1,9 @@
 const mysql = require('mysql2/promise');
 
 const connection = mysql.createPool({
-    host: 'localhost',
+    host: 'db',
     user: 'root',
-    password: '',
+    password: 'password',
     database: 'almacen'
 });
 
@@ -23,7 +23,7 @@ async function validarUsuario(usuario, password) {
 }
 
 async function crearUsuario(nombre, email, usuario, password) {
-    const result = await connection.query('INSERT INTO usuarios VALUES(?,?,?,?)', [nombre, email, usuario, password]);
+    const result = await connection.query('INSERT INTO usuarios (nombre, email, password, usuario) VALUES(?,?,?,?)', [nombre, email, password, usuario]);
     return result;
 }
 

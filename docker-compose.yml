@@ -1,57 +1,44 @@
-version: '3'
+version: '2'
 services:
-  microWeb:
-    image: jparedeshub/microweb:latest
+  usuarios:
+    build: ./usuarios
     ports:
-      - "8181:80"
-    depends_on:
+      - "3001:3001"
+    links:
+      - db
+
+  productos:
+    build: ./productos
+    ports:
+      - "3002:3002"
+    links:
+      - db
+
+  ordenes:
+    build: ./ordenes
+    ports:
+      - "3003:3003"
+    links:
+      - db
+      - usuarios
+      - productos
+
+  microweb:
+    build: ./microweb
+    ports:
+      - "1080:80"
+    links:
       - usuarios
       - productos
       - ordenes
-  usuarios:
-    image: jparedeshub/usuarios:latest
-    ports:
-      - "3001:3001"
-    depends_on:
-      - db_usuarios
-  db_usuarios:
-    image: mysql:8.0
-    ports:
-      - "3309:3306"
+  db:
+    image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD=mysql
-      - MYSQL_DATABASE=usuarios_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "32000:3306"
     volumes:
-      - ./usuarios/db:/var/lib/mysql
-  productos:
-    image: jparedeshub/productos:latest
-    ports:
-      - "3002:3002"
-    depends_on:
-      - db_productos
-  db_productos:
-    image: mysql:8.0
-    ports:
-      - "3307:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=mysql
-      - MYSQL_DATABASE=productos_db
-    volumes:
-      - ./productos/db:/var/lib/mysql
-  ordenes:
-    image: jparedeshub/ordenes:latest
-    ports:
-      - "3003:3003"
-    depends_on:
-      - usuarios
-      - productos
-      - db_ordenes
-  db_ordenes:
-    image: mysql:8.0
-    ports:
-      - "3308:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=mysql
-      - MYSQL_DATABASE=ordenes_db
-    volumes:
-      - ./ordenes/db:/var/lib/mysql
+      - db_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d:ro
+volumes:
+  db_data:

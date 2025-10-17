@@ -22,7 +22,7 @@ async function actualizarProducto(id, inventario) {
 }
 
 async function crearProducto(nombre, precio, inventario) {
-    const result = await connection.query('INSERT INTO productos VALUES(null,?,?,?)', [nombre, precio, inventario]);
+    const result = await connection.query('INSERT INTO productos VALUES(null,?,?,?)', [nombre, inventario, precio]);
     return result;
 }
 

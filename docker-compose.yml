@@ -1,4 +1,3 @@
-version: '2'
 services:
   db:
     image: mysql:5.7
@@ -12,8 +11,12 @@ services:
   usuarios:
     build: ./usuarios
     image: salome0rivas/usuarios-service
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"
+    deploy:
+        placement:
+           constraints:
+               - node.hostname == servidorUbuntu1
     links:
       - db
 
@@ -22,6 +25,10 @@ services:
     image: salome0rivas/productos-service
     ports:
       - "3002:3002"
+    deploy:
+        placement:
+           constraints:
+               - node.hostname == servidorUbuntu1
     links:
       - db
 
@@ -30,6 +37,11 @@ services:
     image: salome0rivas/ordenes-service
     ports:
       - "3003:3003"
+    deploy:
+        placement:
+           constraints:
+               - node.hostname == servidorUbuntu1
+
     links:
       - db
       - usuarios
@@ -40,7 +52,21 @@ services:
     image: salome0rivas/microweb
     ports:
       - "8080:80"
+    deploy:
+        placement:
+           constraints:
+               - node.hostname == servidorUbuntu2
     links:
+      - usuarios
+      - productos
+      - ordenes
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - "3080:3080"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
       - usuarios
       - productos
       - ordenes
